@@ -11,3 +11,6 @@ docker run --name mysql-3307 -p 3307:3306 -d -v g:/vagrant/docker/mysql/3307/my.
 change master to master_host='mysql', master_user='root', master_password='root1234', master_port=3306, master_log_file='mysql-bin.000001', master_log_pos=0, master_connect_retry=30;
 
 start slave;
+
+
+docker run -d -v g:/vagrant/www:/var/www/html --link mysql:mysql -p 9502:9502 --name websocket --link redis:redis yidashi/php
