@@ -5,9 +5,12 @@ nginx:
     links:
         - php:php
     volumes:
-        - /Users/yidashi/docker/nginx/nginx.conf:/etc/nginx/nginx.conf
-        - /Users/yidashi/docker/nginx/servers:/etc/nginx/servers
-        - /Users/yidashi/docker/nginx/fastcgi.conf:/etc/nginx/fastcgi.conf
+        # - /Users/yidashi/docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+        # - /Users/yidashi/docker/nginx/servers:/etc/nginx/servers
+        # - /Users/yidashi/docker/nginx/fastcgi.conf:/etc/nginx/fastcgi.conf
+        - g:/vagrant/docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+        - g:/vagrant/docker/nginx/servers:/etc/nginx/servers
+        - g:/vagrant/docker/nginx/fastcgi.conf:/etc/nginx/fastcgi.conf
     volumes_from:
         - php
 php:
@@ -15,14 +18,28 @@ php:
     links:
         - mysql:mysql
     volumes:
-        - /Users/yidashi/www:/var/www/html
+        # - /Users/yidashi/www:/var/www/html
+        - g:/vagrant/www:/var/www/html
 mysql:
     image: yidashi/mysql
     ports:
         - "3306:3306"
     volumes:
-        - /Users/yidashi/docker/mysql/my.cnf:/etc/mysql/my.cnf
-        - /Users/yidashi/docker/mysql/data:/var/lib/mysql
-        - /Users/yidashi/docker/mysql/log:/var/log/mysql
+        # - /Users/yidashi/docker/mysql/my.cnf:/etc/mysql/my.cnf
+        # - /Users/yidashi/docker/mysql/data:/var/lib/mysql
+        # - /Users/yidashi/docker/mysql/log:/var/log/mysql
+        - g:/vagrant/docker/mysql/my.cnf:/etc/mysql/my.cnf
+        - g:/vagrant/docker/mysql/data:/var/lib/mysql
+        - g:/vagrant/docker/mysql/log:/var/log/mysql
     environment:
          - MYSQL_ROOT_PASSWORD=root1234
+websocket:
+    image: yidashi/php
+    ports:
+        - "9502:9502"
+    links:
+        - mysql:mysql
+    volumes:
+        # - /Users/yidashi/www:/var/www/html
+        - g:/vagrant/www:/var/www/html
+    entrypoint: php /var/www/html/autoloan/yii im/server
