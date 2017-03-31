@@ -1,0 +1,16 @@
+\redis-master:
+    image: yidashi/redis
+    command: /etc/redis.conf
+    ports:
+        - "6379:6379"
+    volumes:
+        - g:/vagrant/docker/redis/master.conf:/etc/redis.conf
+redis-slave:
+    image: yidashi/redis
+    command: /etc/redis.conf
+    ports:
+        - "6380:6379"
+    links:
+        - redis-master:master
+    volumes:
+        - g:/vagrant/docker/redis/slave.conf:/etc/redis.conf

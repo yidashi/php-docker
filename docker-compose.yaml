@@ -2,12 +2,15 @@ nginx:
     image: yidashi/nginx
     ports:
         - "80:80"
+        - "443:443"
     links:
         - php:php
     volumes:
         - g:/vagrant/docker/nginx/nginx.conf:/etc/nginx/nginx.conf
         - g:/vagrant/docker/nginx/servers:/etc/nginx/servers
         - g:/vagrant/docker/nginx/fastcgi.conf:/etc/nginx/fastcgi.conf
+        - g:/vagrant/docker/nginx/server.key:/etc/nginx/server.key
+        - g:/vagrant/docker/nginx/server.crt:/etc/nginx/server.crt
     volumes_from:
         - php
 php:
@@ -16,6 +19,8 @@ php:
         - mysql:mysql
     volumes:
         - g:/vagrant/www:/var/www/html
+        - g:/vagrant/docker/php/log:/usr/local/var/log
+        - g:/vagrant/docker/php/php.ini:/usr/local/etc/php/php.ini
 mysql:
     image: yidashi/mysql
     ports:
