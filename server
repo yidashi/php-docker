@@ -1,1 +1,62 @@
-/usr/local/bin/server
+#! /bin/bash
+
+add()
+{
+if [[ $1 == "" ]]; then
+    echo "请输入要添加的域名"
+    exit
+fi
+
+target_file=/docker/nginx/servers/$1.conf
+
+read -p "选择php版本 5 or 7：" php_version
+
+cat <<EOF > $target_file
+server {
+     server_name $1;
+     listen 80;
+     index index.html index.htm index.php;
+     root /var/www/html/$1;
+     location / {
+         try_files \$uri \$uri/ /index.php?\$query_string;                                                                         
+     }
+     location ~ \.php$ {
+         fastcgi_pass php$php_version:9000;
+         include fastcgi.conf;
+     }
+}
+EOF
+
+
+mkdir /www/$1
+
+restart
+
+echo "添加成功！"
+}
+del()
+{
+if [[ $1 == "" ]]; then
+    echo "请输入要删除的域名"
+    exit
+fi
+
+rm -f /docker/nginx/servers/$2.conf
+rm -rf /www/$1
+restart
+echo "删除成功"
+}
+case "$1" in
+    add)
+        add $2;;
+    del)
+        del $2;;
+    start)
+        docker-compose -f /docker/docker-compose.yaml start;;
+    restart)
+        docker-compose -f /docker/docker-compose.yaml restart;;
+    stop)
+        docker-compose -f /docker/docker-compose.yaml stop;;
+    *)
+        echo "用法：{add|del|start|restart|stop}";;
+esac

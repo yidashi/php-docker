@@ -7,42 +7,42 @@ nginx:
         - php7:php7
         - php5:php5
     volumes:
-        - /docker/nginx/nginx.conf:/etc/nginx/nginx.conf
-        - /docker/nginx/servers:/etc/nginx/servers
-        - /docker/nginx/fastcgi.conf:/etc/nginx/fastcgi.conf
-        - /www:/var/www/html
+        - g:/vagrant/docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+        - g:/vagrant/docker/nginx/servers:/etc/nginx/servers
+        - g:/vagrant/docker/nginx/fastcgi.conf:/etc/nginx/fastcgi.conf
+        - g:/vagrant/www:/var/www/html
 php7:
     build: "./php/php7"
     links:
         - mysql:mysql
         - redis:redis
     volumes:
-        - /www:/var/www/html
-        - /docker/php/php7/log:/usr/local/var/log
-        - /docker/php/php7/php.ini:/usr/local/etc/php/php.ini
+        - g:/vagrant/www:/var/www/html
+        - g:/vagrant/docker/php/php7/log:/usr/local/var/log
+        - g:/vagrant/docker/php/php7/php.ini:/usr/local/etc/php/php.ini
 php5:
     build: "./php/php5"
     links:
         - mysql:mysql
         - redis:redis
     volumes:
-        - /www:/var/www/html
-        - /docker/php/php5/log:/usr/local/var/log
-        - /docker/php/php5/php.ini:/usr/local/etc/php/php.ini
+        - g:/vagrant/www:/var/www/html
+        - g:/vagrant/docker/php/php5/log:/usr/local/var/log
+        - g:/vagrant/docker/php/php5/php.ini:/usr/local/etc/php/php.ini
 mysql:
     image: mysql
     ports:
         - "3306:3306"
     volumes:
-        - /docker/mysql/my.cnf:/etc/mysql/my.cnf
-        - /docker/mysql/data:/var/lib/mysql
-        - /docker/mysql/log:/var/log/mysql
+        - g:/vagrant/docker/mysql/my.cnf:/etc/mysql/my.cnf
+        - g:/vagrant/docker/mysql/data:/var/lib/mysql
+        - g:/vagrant/docker/mysql/log:/var/log/mysql
     environment:
-         - MYSQL_ROOT_PASSWORD=lychncomic2017
+         - MYSQL_ROOT_PASSWORD=root1234
 redis:
      image: redis
      command: /etc/redis.conf
      ports:
          - "6379:6379"
      volumes:
-         - /docker/redis/master.conf:/etc/redis.conf
+         - g:/vagrant/docker/redis/master.conf:/etc/redis.conf

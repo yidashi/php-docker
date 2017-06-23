@@ -1,4 +1,4 @@
-\redis-master:
+redis-master:
     image: yidashi/redis
     command: /etc/redis.conf
     ports:
