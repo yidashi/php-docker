@@ -1,5 +1,8 @@
 #! /bin/bash
-
+restart()
+{
+docker-compose -f d:/work/docker/docker-compose.yaml restart
+}
 add()
 {
 if [[ $1 == "" ]]; then
@@ -7,7 +10,7 @@ if [[ $1 == "" ]]; then
     exit
 fi
 
-target_file=/docker/nginx/servers/$1.conf
+target_file=d:/work/docker/nginx/servers/$1.conf
 
 read -p "选择php版本 5 or 7：" php_version
 
@@ -18,7 +21,7 @@ server {
      index index.html index.htm index.php;
      root /var/www/html/$1;
      location / {
-         try_files \$uri \$uri/ /index.php?\$query_string;                                                                         
+         try_files \$uri \$uri/ /index.php?\$query_string;
      }
      location ~ \.php$ {
          fastcgi_pass php$php_version:9000;
@@ -54,7 +57,7 @@ case "$1" in
     start)
         docker-compose -f /docker/docker-compose.yaml start;;
     restart)
-        docker-compose -f /docker/docker-compose.yaml restart;;
+        restart;;
     stop)
         docker-compose -f /docker/docker-compose.yaml stop;;
     *)
