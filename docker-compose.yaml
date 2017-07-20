@@ -20,6 +20,8 @@ services:
             - ${wwwdir}:/var/www/html
             - ${dockerdir}/php/php7/log:/usr/local/var/log
             - ${dockerdir}/php/php7/php.ini:/usr/local/etc/php/php.ini
+        extra_hosts:
+            - "api.csiautos.cn:192.168.1.200"
     php5:
         build: "./php/php5"
         volumes:
