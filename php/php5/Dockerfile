@@ -12,5 +12,5 @@ RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
     && docker-php-ext-install iconv mcrypt \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install gd && docker-php-ext-install mysql && docker-php-ext-install mbstring \
-    && docker-php-ext-install pcntl
+    && docker-php-ext-install pcntl  && docker-php-ext-install pdo_mysql && docker-php-ext-install mysqli && pecl install memcache
 CMD ["php-fpm"]
