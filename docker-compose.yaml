@@ -5,29 +5,48 @@ services:
         ports:
             - "80:80"
             - "443:443"
-        links:
-            - php7:php7
-            - php5:php5
         volumes:
             - ${dockerdir}/nginx/nginx.conf:/etc/nginx/nginx.conf
             - ${dockerdir}/nginx/servers:/etc/nginx/servers
             - ${dockerdir}/nginx/fastcgi.conf:/etc/nginx/fastcgi.conf
             - ${dockerdir}/nginx/log:/var/log/nginx
             - ${wwwdir}:/var/www/html
-    php7:
-        build: "./php/php7"
+            - ${dockerdir}/nginx/key:/etc/nginx/key
+    php7.1:
+        build: "./php/php7.1"
         volumes:
             - ${wwwdir}:/var/www/html
-            - ${dockerdir}/php/php7/log:/usr/local/var/log
-            - ${dockerdir}/php/php7/php.ini:/usr/local/etc/php/php.ini
-    php5:
-        build: "./php/php5"
+            - ${dockerdir}/php/php7.1/log:/usr/local/var/log
+            - ${dockerdir}/php/php7.1/php.ini:/usr/local/etc/php/php.ini
+        external_links:
+            - nginx:local.iautos.cn
+            - nginx:local.data.iautos.cn
+    php5.4:
+        build: "./php/php5.4"
         volumes:
             - ${wwwdir}:/var/www/html
-            - ${dockerdir}/php/php5/log:/usr/local/var/log
-            - ${dockerdir}/php/php5/php.ini:/usr/local/etc/php/php.ini
+            - ${dockerdir}/php/php5.4/log:/usr/local/var/log
+            - ${dockerdir}/php/php5.4/php.ini:/usr/local/etc/php/php.ini
         extra_hosts:
             - "api.csiautos.cn:192.168.1.200"
+            - "u.csiautos.cn:192.168.1.200"
+        external_links:
+            - nginx:local.iautos.cn
+            - nginx:local.data.iautos.cn
+            - nginx:local.api.iautos.cn
+    php5.6:
+        build: "./php/php5.6"
+        volumes:
+            - ${wwwdir}:/var/www/html
+            - ${dockerdir}/php/php5.6/log:/usr/local/var/log
+            - ${dockerdir}/php/php5.6/php.ini:/usr/local/etc/php/php.ini
+        extra_hosts:
+            - "api.csiautos.cn:192.168.1.200"
+            - "u.csiautos.cn:192.168.1.200"
+        external_links:
+            - nginx:local.iautos.cn
+            - nginx:local.data.iautos.cn
+            - nginx:local.api.iautos.cn
     mysql:
         image: mysql
         ports:
