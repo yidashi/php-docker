@@ -66,14 +66,35 @@ RUN docker-php-ext-enable mongodb amqp redis xlswriter imagick swoole
 #     && rm -rf swoole-${SWOOLE_VER}.tgz \
 #     && rm -rf swoole-${SWOOLE_VER}
 
-# 安装 Composer
-ENV COMPOSER_HOME /root/composer
+# # 安装 Composer
+# ENV COMPOSER_HOME /root/composer
+# RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# ENV PATH $COMPOSER_HOME/vendor/bin:$PATH
+# RUN composer config -g repo.packagist composer ${COMPOSER_URL}
+# RUN composer global require "fxp/composer-asset-plugin:^1.4.0"
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-ENV PATH $COMPOSER_HOME/vendor/bin:$PATH
 
-RUN composer config -g repo.packagist composer ${COMPOSER_URL}
+# Install composer and change it's cache home
+RUN curl -o /usr/bin/composer https://mirrors.aliyun.com/composer/composer.phar \
+    && chmod +x /usr/bin/composer
+ENV COMPOSER_HOME=/tmp/composer
 
-RUN composer global require "fxp/composer-asset-plugin:^1.4.0"
+# 1.0.24 增加 odbc, pdo_odbc 扩展   
+RUN set -ex; \  
+docker-php-source extract; \  
+{ \  
+     echo '# https://github.com/docker-library/php/issues/103#issuecomment-271413933'; \  
+     echo 'AC_DEFUN([PHP_ALWAYS_SHARED],[])dnl'; \  
+     echo; \  
+     cat /usr/src/php/ext/odbc/config.m4; \  
+} > temp.m4; \  
+mv temp.m4 /usr/src/php/ext/odbc/config.m4; \  
+apt-get update; \  
+apt-get install -y --no-install-recommends unixodbc-dev; \  
+rm -rf /var/lib/apt/lists/*; \  
+docker-php-ext-configure odbc --with-unixODBC=shared,/usr; \  
+docker-php-ext-configure pdo_odbc --with-pdo-odbc=unixODBC,/usr; \  
+docker-php-ext-install odbc pdo_odbc; \  
+docker-php-source delete 
 
 CMD ["php-fpm"]
