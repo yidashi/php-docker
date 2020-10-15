@@ -3,8 +3,8 @@ ARG PHP_VER
 # 镜像包
 FROM php:${PHP_VER}
 
-ARG SWOOLE_VER
-ARG COMPOSER_URL
+# ARG SWOOLE_VER
+# ARG COMPOSER_URL
 
 # 设置时区为上海
 ENV TZ=Asia/Shanghai

@@ -4,7 +4,7 @@ ARG PHP_VER
 FROM php:${PHP_VER}
 
 # ARG SWOOLE_VER
-ARG COMPOSER_URL
+# ARG COMPOSER_URL
 
 # 设置时区为上海
 ENV TZ=Asia/Shanghai
@@ -78,6 +78,13 @@ RUN docker-php-ext-enable mongodb amqp redis xlswriter imagick swoole
 RUN curl -o /usr/bin/composer https://mirrors.aliyun.com/composer/composer.phar \
     && chmod +x /usr/bin/composer
 ENV COMPOSER_HOME=/tmp/composer
+
+# 1.0.14 增加 pdo_dblib 扩展   
+RUN apt-get update && \  
+apt-get install -y --no-install-recommends freetds-dev && \  
+rm -r /var/lib/apt/lists/* && \  
+docker-php-ext-configure pdo_dblib --with-libdir=lib/x86_64-linux-gnu && \  
+docker-php-ext-install -j$(nproc) pdo_dblib  
 
 # 1.0.24 增加 odbc, pdo_odbc 扩展   
 RUN set -ex; \  

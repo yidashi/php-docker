@@ -19,7 +19,7 @@ services:
             args:
               - PHP_VER=7.1-fpm # php版本
               # - SWOOLE_VER=4.4.5 # swoole版本,pecl安装最新版
-              - COMPOSER_URL=${COMPOSER_URL} # composer源url
+              # - COMPOSER_URL=${COMPOSER_URL} # composer源url
         volumes:
             - ${wwwdir}:/var/www/html
             - ${dockerdir}/php/php7.1/log:/usr/local/var/log
@@ -34,7 +34,7 @@ services:
             args:
                 - PHP_VER=7.2-fpm # php版本
                 # - SWOOLE_VER=4.4.5 # swoole版本,pecl安装最新版
-                - COMPOSER_URL=${COMPOSER_URL} # composer源url
+                # - COMPOSER_URL=${COMPOSER_URL} # composer源url
         ports:
             - "9105:9105"
         #     - "9300:9300/udp"
@@ -74,7 +74,7 @@ services:
     #         - nginx:local.data.iautos.cn
     #         - nginx:local.api.iautos.cn
     mysql:
-        image: mysql
+        image: mysql:${MYSQL_VERSION}
         ports:
             - "3306:3306"
         volumes:
