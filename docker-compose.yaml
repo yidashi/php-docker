@@ -13,6 +13,7 @@ services:
             - ${wwwdir}:/var/www/html
             - ${dockerdir}/nginx/key:/etc/nginx/key
     php7.1:
+        image: www.51siyuan.cn:5000/php:7.1-fpm
         build:
             context: "./php/php7.1"
             args:
