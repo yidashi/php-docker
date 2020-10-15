@@ -30,8 +30,7 @@ RUN apt-get update && apt-get install -y \
         iconv \
         mcrypt \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install gd && docker-php-ext-install pdo_mysql && docker-php-ext-install mbstring \
-    && docker-php-ext-install pcntl
+    && docker-php-ext-install gd && docker-php-ext-install pdo_mysql
 
 # pecl安装amqp、mongodb、redis、xlswriter扩展
 RUN pecl install -o -f mongodb amqp redis xlswriter imagick swoole  \
