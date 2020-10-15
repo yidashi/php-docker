@@ -13,7 +13,12 @@ services:
             - ${wwwdir}:/var/www/html
             - ${dockerdir}/nginx/key:/etc/nginx/key
     php7.1:
-        build: "./php/php7.1"
+        build:
+            context: "./php/php7.1"
+            args:
+              - PHP_VER=7.1-fpm # php版本
+              # - SWOOLE_VER=4.4.5 # swoole版本,pecl安装最新版
+              - COMPOSER_URL=${COMPOSER_URL} # composer源url
         volumes:
             - ${wwwdir}:/var/www/html
             - ${dockerdir}/php/php7.1/log:/usr/local/var/log
@@ -21,32 +26,52 @@ services:
         external_links:
             - nginx:local.iautos.cn
             - nginx:local.data.iautos.cn
-    php5.4:
-        build: "./php/php5.4"
+    
+    php7.2:
+        build:
+            context: "./php/php7.2"
+            args:
+                - PHP_VER=7.2-fpm # php版本
+                # - SWOOLE_VER=4.4.5 # swoole版本,pecl安装最新版
+                - COMPOSER_URL=${COMPOSER_URL} # composer源url
+        ports:
+            - "9105:9105"
+        #     - "9300:9300/udp"
+        #     - "9301:9301/udp"
         volumes:
             - ${wwwdir}:/var/www/html
-            - ${dockerdir}/php/php5.4/log:/usr/local/var/log
-            - ${dockerdir}/php/php5.4/php.ini:/usr/local/etc/php/php.ini
-        extra_hosts:
-            - "api.csiautos.cn:192.168.1.200"
-            - "u.csiautos.cn:192.168.1.200"
+            - ${dockerdir}/php/php7.2/log:/usr/local/var/log
+            - ${dockerdir}/php/php7.2/php.ini:/usr/local/etc/php/php.ini
         external_links:
             - nginx:local.iautos.cn
             - nginx:local.data.iautos.cn
-            - nginx:local.api.iautos.cn
-    php5.6:
-        build: "./php/php5.6"
-        volumes:
-            - ${wwwdir}:/var/www/html
-            - ${dockerdir}/php/php5.6/log:/usr/local/var/log
-            - ${dockerdir}/php/php5.6/php.ini:/usr/local/etc/php/php.ini
-        extra_hosts:
-            - "api.csiautos.cn:192.168.1.200"
-            - "u.csiautos.cn:192.168.1.200"
-        external_links:
-            - nginx:local.iautos.cn
-            - nginx:local.data.iautos.cn
-            - nginx:local.api.iautos.cn
+            
+    # php5.4:
+    #     build: "./php/php5.4"
+    #     volumes:
+    #         - ${wwwdir}:/var/www/html
+    #         - ${dockerdir}/php/php5.4/log:/usr/local/var/log
+    #         - ${dockerdir}/php/php5.4/php.ini:/usr/local/etc/php/php.ini
+    #     extra_hosts:
+    #         - "api.csiautos.cn:192.168.1.200"
+    #         - "u.csiautos.cn:192.168.1.200"
+    #     external_links:
+    #         - nginx:local.iautos.cn
+    #         - nginx:local.data.iautos.cn
+    #         - nginx:local.api.iautos.cn
+    # php5.6:
+    #     build: "./php/php5.6"
+    #     volumes:
+    #         - ${wwwdir}:/var/www/html
+    #         - ${dockerdir}/php/php5.6/log:/usr/local/var/log
+    #         - ${dockerdir}/php/php5.6/php.ini:/usr/local/etc/php/php.ini
+    #     extra_hosts:
+    #         - "api.csiautos.cn:192.168.1.200"
+    #         - "u.csiautos.cn:192.168.1.200"
+    #     external_links:
+    #         - nginx:local.iautos.cn
+    #         - nginx:local.data.iautos.cn
+    #         - nginx:local.api.iautos.cn
     mysql:
         image: mysql
         ports:
@@ -56,7 +81,11 @@ services:
             - ${dockerdir}/mysql/data:/var/lib/mysql
             - ${dockerdir}/mysql/log:/var/log/mysql
         environment:
-             - MYSQL_ROOT_PASSWORD=root1234
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_ROOT_USER=${MYSQL_ROOT_USER}
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     redis:
          image: redis
          command: /etc/redis.conf
@@ -64,7 +93,8 @@ services:
              - "6379:6379"
          volumes:
              - ${dockerdir}/redis/master.conf:/etc/redis.conf
-    memcached:
-        image: memcached
-        ports:
-            - "11211:11211"
+
+    # memcached:
+    #     image: memcached
+    #     ports:
+    #         - "11211:11211"
