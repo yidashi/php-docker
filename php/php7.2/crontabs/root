@@ -1,0 +1,2 @@
+## 每分钟执行一次定时任务
+## * * * * * /path-to-your-project/yii schedule/run --scheduleFile=@console/config/schedule.php 1>> /tmp/rageframeConsoleLog.text 2>&1
