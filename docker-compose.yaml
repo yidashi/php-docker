@@ -20,6 +20,8 @@ services:
               - PHP_VER=7.1-fpm # php版本
               # - SWOOLE_VER=4.4.5 # swoole版本,pecl安装最新版
               # - COMPOSER_URL=${COMPOSER_URL} # composer源url
+        # ports:
+        #     - "9100:9100"
         volumes:
             - ${wwwdir}:/var/www/html
             - ${dockerdir}/php/php7.1/log:/usr/local/var/log
